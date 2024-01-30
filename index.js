@@ -1,72 +1,19 @@
 const express = require('express');
 const cors = require('cors')
-const ShortUrl = require("./model/shortUrl")
-require('dotenv').config()
 const app = express()
+require('dotenv').config()
+const PORT =  process.env.PORT;
+app.use(cors())
 app.use(express.json())
-app.use(cors())   
-const mongoose = require('mongoose')
- 
-mongoose.connect(process.env.DATABASE, { useNewUrlParser: true, useUnifiedTopology: true, }).then(() => {
-    console.log("Connected")
-}).catch((e) => {
-    console.log(e, "Error Mongoose ")
-})
 
+app.get("/api/testing", async (req, res) => { res.send("Working 0.1") });
 
-app.post("/convert-short-url", (req, res) => {
-    let data = req.body
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (var i = 0; i < 5; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    const payload = {
-        fullUrl: data.fullUrl,
-        shortUrl: text
-    }
-    ShortUrl.create(payload).then(createdRecord => {
-        return res.status(200).send({
-            status: 200,
-            msg: "ok",
-            data: createdRecord,
-        });
-    }).catch(e => {
-        res.status(400).send({
-            status: 400,
-            msg: "error",
-            data: e,
-        });
-    });
-});
+// Serve static files from the 'public' directory
+// app.use(express.static(path.join(__dirname, 'public')));
 
+// app.use(express.static("../public"));
+app.use("/public", express.static("./public"));
 
-
-app.get("/get-url", (req, res) => {
-    ShortUrl.find().then(createdRecord => {
-        return res.status(200).send({
-            status: 200,
-            msg: "ok",
-            data: createdRecord,
-        });
-    }).catch(e => {
-        res.status(400).send({
-            status: 400,
-            msg: "error",
-            data: e,
-        });
-    });
-});
-
-app.get("/testing", (req, res) => {
-        res.status(200).send({
-            status: 200,
-            msg: "Working",
-        });
-
-});
-
-
-const PORT = 5000
 app.listen(PORT, () => {
-    console.log(`Server is running at ${PORT}`)
-}) 
+  console.log("Server is running..." + PORT)
+})
