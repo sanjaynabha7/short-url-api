@@ -57,6 +57,14 @@ app.get("/get-url", (req, res) => {
     });
 });
 
+app.get("/testing", (req, res) => {
+        res.status(200).send({
+            status: 200,
+            msg: "Working",
+        });
+
+});
+
 
 const PORT = 5000
 app.listen(PORT, () => {
